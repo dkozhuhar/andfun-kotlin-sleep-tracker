@@ -18,7 +18,10 @@ package com.example.android.trackmysleepquality
 
 import android.annotation.SuppressLint
 import android.content.res.Resources
+import androidx.lifecycle.LiveData
 import java.text.SimpleDateFormat
+import java.util.*
+import java.util.concurrent.CountDownLatch
 
 /**
  * These functions create a formatted string that can be set in a TextView.
@@ -98,3 +101,4 @@ fun convertLongToDateString(systemTime: Long): String {
 //        return HtmlCompat.fromHtml(sb.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY)
 //    }
 //}
+

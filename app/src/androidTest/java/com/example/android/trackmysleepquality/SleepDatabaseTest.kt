@@ -16,6 +16,7 @@
 
 package com.example.android.trackmysleepquality
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -25,7 +26,9 @@ import com.example.android.trackmysleepquality.database.SleepNight
 import org.junit.Assert.assertEquals
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import java.io.IOException
 
@@ -37,6 +40,9 @@ import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
 class SleepDatabaseTest {
+
+    @get:Rule
+    var rule: TestRule = InstantTaskExecutorRule()
 
     private lateinit var sleepDao: SleepDatabaseDao
     private lateinit var db: SleepDatabase
@@ -75,9 +81,9 @@ class SleepDatabaseTest {
         val night2 = SleepNight()
         sleepDao.insert(night1)
         sleepDao.insert(night2)
-        val allNights = sleepDao.getAllNights()
+        val allNights = LiveDataTestUtil.getValue(sleepDao.getAllNights())
 
-        assertEquals(allNights.value?.size, 2)
+        assertEquals(allNights.size, 2)
     }
 
     @Test
@@ -96,11 +102,15 @@ class SleepDatabaseTest {
     @Throws(Exception::class)
     fun deleteAllNights() {
         val night = SleepNight()
+        var rowsCount : Int? = null
         sleepDao.insert(night)
-        val allNights = sleepDao.getAllNights()
-        assertEquals(allNights.value?.size, 1)
+        var allNights = LiveDataTestUtil.getValue(sleepDao.getAllNights())
+        assertEquals(1, allNights.size )
+
+        //assertEquals(rowsCount, 1)
         sleepDao.clear()
-        assertEquals(allNights.value?.size, 0)
+        allNights = LiveDataTestUtil.getValue(sleepDao.getAllNights())
+        assertEquals(0, allNights.size )
     }
 }
 
