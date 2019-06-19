@@ -17,15 +17,20 @@
 package com.example.android.trackmysleepquality.sleeptracker
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
+import kotlinx.android.synthetic.*
+import kotlinx.android.synthetic.main.fragment_sleep_tracker.*
+import kotlinx.android.synthetic.main.fragment_sleep_tracker.view.*
 
 /**
  * A fragment with buttons to record start and end times for sleep, which are saved in
@@ -57,6 +62,14 @@ class SleepTrackerFragment : Fragment() {
         binding.lifecycleOwner = this
 
         binding.sleepTrackerViewModel = sleepTrackerViewModel
+
+        binding.root.stop_button.setOnClickListener {
+//            Log.i("SleepTrackerFragment", "STOP clicked")
+            if (binding.sleepTrackerViewModel!!.tonight.value != null) {
+                binding.sleepTrackerViewModel!!.onStopTracking()
+                this.findNavController().navigate(SleepTrackerFragmentDirections.actionSleepTrackerFragmentToSleepQualityFragment(binding.sleepTrackerViewModel!!.tonight.value?.nightId!!))
+            }
+        }
 
         return binding.root
     }

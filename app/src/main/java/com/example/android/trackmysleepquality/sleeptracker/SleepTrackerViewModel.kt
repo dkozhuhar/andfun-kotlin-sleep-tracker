@@ -18,7 +18,6 @@ package com.example.android.trackmysleepquality.sleeptracker
 
 import android.app.Application
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -43,14 +42,17 @@ class SleepTrackerViewModel(
 
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
-    private var tonight = MutableLiveData<SleepNight?>()
+    private var _tonight = MutableLiveData<SleepNight?>()
 
-    // initialize tonight
+    // initialize _tonight
     init {
         uiScope.launch {
-            tonight.value = getTonightFromDatabase()
+            _tonight.value = getTonightFromDatabase()
         }
     }
+
+    val tonight: LiveData<SleepNight?>
+    get() = _tonight
 
     private var nights = database.getAllNights()
 
@@ -64,25 +66,25 @@ class SleepTrackerViewModel(
 
 
     fun onStartTracking() {
-        if (tonight.value == null || tonight.value?.startTimeMilli != tonight.value?.endTimeMilli) {
+        if (_tonight.value == null || _tonight.value?.startTimeMilli != _tonight.value?.endTimeMilli) {
             uiScope.launch {
                 withContext(Dispatchers.IO) {
                     database.insert(SleepNight())
                 }
-                tonight.value = getTonightFromDatabase()
+                _tonight.value = getTonightFromDatabase()
             }
         }
     }
 
     fun onStopTracking() {
-        if (tonight.value == null) return
+
         Log.i("SleepTrackerViewModel", "onStopTracking pressed")
         uiScope.launch {
-            tonight.value!!.endTimeMilli = System.currentTimeMillis()
+            _tonight.value!!.endTimeMilli = System.currentTimeMillis()
             withContext(Dispatchers.IO) {
-                database.update(tonight.value!!)
+                database.update(_tonight.value!!)
             }
-            tonight.value = getTonightFromDatabase()
+            _tonight.value = getTonightFromDatabase()
         }
     }
 
@@ -91,7 +93,7 @@ class SleepTrackerViewModel(
             withContext(Dispatchers.IO) {
                 database.clear()
             }
-            tonight.value = getTonightFromDatabase()
+            _tonight.value = getTonightFromDatabase()
         }
     }
 
