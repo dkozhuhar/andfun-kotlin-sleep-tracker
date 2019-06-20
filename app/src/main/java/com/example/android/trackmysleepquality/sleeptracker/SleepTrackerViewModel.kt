@@ -31,7 +31,7 @@ import kotlinx.coroutines.*
  * ViewModel for SleepTrackerFragment.
  */
 class SleepTrackerViewModel(
-        val database: SleepDatabaseDao,
+        private val database: SleepDatabaseDao,
         application: Application) : AndroidViewModel(application) {
     private val viewModelJob = Job()
 
@@ -62,7 +62,7 @@ class SleepTrackerViewModel(
         it?.let { false } ?: true
     }
 
-    private var nights = database.getAllNights()
+    var nights = database.getAllNights()
 
     val clearButtonVisible = Transformations.map(nights) {
         when (it.size) {
