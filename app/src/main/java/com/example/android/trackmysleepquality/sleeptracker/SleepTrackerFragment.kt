@@ -28,6 +28,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.fragment_sleep_tracker.*
 import kotlinx.android.synthetic.main.fragment_sleep_tracker.view.*
@@ -69,6 +70,11 @@ class SleepTrackerFragment : Fragment() {
                 binding.sleepTrackerViewModel!!.onStopTracking()
                 this.findNavController().navigate(SleepTrackerFragmentDirections.actionSleepTrackerFragmentToSleepQualityFragment(binding.sleepTrackerViewModel!!.tonight.value?.nightId!!))
             }
+        }
+
+        binding.root.clear_button.setOnClickListener {
+            sleepTrackerViewModel.onClear()
+            Snackbar.make(it,"Data cleared", Snackbar.LENGTH_SHORT).show()
         }
 
         return binding.root

@@ -54,7 +54,23 @@ class SleepTrackerViewModel(
     val tonight: LiveData<SleepNight?>
     get() = _tonight
 
+    val stopButtonVisible = Transformations.map(tonight) {
+        it?.let { true } ?: false
+    }
+
+    val startButtonVisible = Transformations.map(tonight) {
+        it?.let { false } ?: true
+    }
+
     private var nights = database.getAllNights()
+
+    val clearButtonVisible = Transformations.map(nights) {
+        when (it.size) {
+            0 -> false
+            else -> true
+        }
+
+    }
 
     private suspend fun getTonightFromDatabase(): SleepNight? {
         return withContext(Dispatchers.IO) {

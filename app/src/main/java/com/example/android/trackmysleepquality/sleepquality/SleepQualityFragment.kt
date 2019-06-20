@@ -22,8 +22,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.android.trackmysleepquality.R
+import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.databinding.FragmentSleepQualityBinding
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_sleep_quality.view.*
 
 /**
  * Fragment that displays a list of clickable icons,
@@ -47,6 +54,48 @@ class SleepQualityFragment : Fragment() {
 
         val application = requireNotNull(this.activity).application
 
+        val dataSource = SleepDatabase.getInstance(application).sleepDatabaseDao
+
+        val viewModel =  ViewModelProviders.of(this, SleepQualityViewModelFactory(SleepQualityFragmentArgs.fromBundle(arguments!!).sleepNightKey,dataSource)).get(SleepQualityViewModel::class.java)
+
+        binding.lifecycleOwner = this
+
+        binding.sleepQualityViewModel = viewModel
+
+        binding.root.quality_zero_image.setOnClickListener {
+            viewModel.update(0)
+            this.navigateBack()
+        }
+
+        binding.root.quality_one_image.setOnClickListener {
+            viewModel.update(1)
+            this.navigateBack()
+        }
+
+        binding.root.quality_two_image.setOnClickListener {
+            viewModel.update(2)
+            this.navigateBack()
+        }
+
+        binding.root.quality_three_image.setOnClickListener {
+            viewModel.update(3)
+            this.navigateBack()
+        }
+
+        binding.root.quality_four_image.setOnClickListener {
+            viewModel.update(4)
+            this.navigateBack()
+        }
+
+        binding.root.quality_five_image.setOnClickListener {
+            viewModel.update(5)
+            this.navigateBack()
+        }
+
         return binding.root
+    }
+
+    private fun navigateBack(){
+        findNavController().navigate(SleepQualityFragmentDirections.actionSleepQualityFragmentToSleepTrackerFragment())
     }
 }
