@@ -54,17 +54,17 @@ class SleepTrackerViewModel(
     val tonight: LiveData<SleepNight?>
     get() = _tonight
 
-    val stopButtonVisible = Transformations.map(tonight) {
+    val stopButtonVisible: LiveData<Boolean> = Transformations.map(tonight) {
         it?.let { true } ?: false
     }
 
-    val startButtonVisible = Transformations.map(tonight) {
+    val startButtonVisible: LiveData<Boolean> = Transformations.map(tonight) {
         it?.let { false } ?: true
     }
 
     var nights = database.getAllNights()
 
-    val clearButtonVisible = Transformations.map(nights) {
+    val clearButtonVisible: LiveData<Boolean> = Transformations.map(nights) {
         when (it.size) {
             0 -> false
             else -> true
