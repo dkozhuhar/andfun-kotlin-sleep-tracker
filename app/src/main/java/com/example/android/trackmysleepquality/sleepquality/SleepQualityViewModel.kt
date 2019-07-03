@@ -38,7 +38,7 @@ class SleepQualityViewModel (val database: SleepDatabaseDao, val nightKey: Long)
 //                val night = database.get(nightKey)
 //                night?.apply { sleepQuality = qualityRating }
 //                database.update(night!!)
-                database.update(database.get(nightKey).value?.apply { sleepQuality = qualityRating }!!)
+                database.update(database.get(nightKey).apply { sleepQuality = qualityRating })
             }
         }
     }
