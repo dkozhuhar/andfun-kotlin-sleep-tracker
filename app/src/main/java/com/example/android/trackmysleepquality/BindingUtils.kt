@@ -1,5 +1,6 @@
 package com.example.android.trackmysleepquality
 
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -9,6 +10,7 @@ import com.example.android.trackmysleepquality.database.SleepNight
 fun TextView.setSleepQuality (item: SleepNight?) {
     item?.let {
         text = convertNumericQualityToString(it.sleepQuality, resources)
+        Log.i("Binding Utils", "$text")
     }
 }
 
