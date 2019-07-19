@@ -80,6 +80,15 @@ class SleepTrackerFragment : Fragment() {
             Snackbar.make(it,"Data cleared", Snackbar.LENGTH_SHORT).show()
         }
         val layoutManager = GridLayoutManager(context, 3)
+        layoutManager.spanSizeLookup = object: GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return when(position) {
+                    0 -> 3
+                    else -> 1
+                }
+            }
+        }
+
 
 
         val adapter = SleepNightAdapter(SleepNightOnClickListener{
@@ -87,7 +96,7 @@ class SleepTrackerFragment : Fragment() {
             this.findNavController().navigate(SleepTrackerFragmentDirections.actionSleepTrackerFragmentToSleepDetailFragment(it))
         })
 
-        sleepTrackerViewModel.nights.observe(this, Observer { adapter.submitList(it) })
+        sleepTrackerViewModel.nights.observe(this, Observer { adapter.submitItemListAndHeader(it) })
 
         binding.root.sleep_list.adapter = adapter
         binding.root.sleep_list.layoutManager = layoutManager
